@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #fbf8f1;
+  color: #2e3621;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Editorial letter-spacing for the wordmark and display type */
+.wordmark {
+  font-family: var(--font-display), serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.eyebrow {
+  font-family: var(--font-body), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 0.68rem;
+}
+
+::selection {
+  background: #3f4a2e;
+  color: #f3ede2;
+}
