@@ -34,3 +34,69 @@ body {
   background: #3f4a2e;
   color: #f3ede2;
 }
+
+/* --------------------------------------------------------------------------
+   Motion
+   Staggered reveals: put .stagger on a parent and children fade up in order.
+   All of it collapses to nothing under prefers-reduced-motion.
+   -------------------------------------------------------------------------- */
+.stagger > * {
+  animation: riseIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 40ms; }
+.stagger > *:nth-child(2) { animation-delay: 110ms; }
+.stagger > *:nth-child(3) { animation-delay: 180ms; }
+.stagger > *:nth-child(4) { animation-delay: 250ms; }
+.stagger > *:nth-child(5) { animation-delay: 320ms; }
+.stagger > *:nth-child(6) { animation-delay: 390ms; }
+.stagger > *:nth-child(7) { animation-delay: 460ms; }
+.stagger > *:nth-child(8) { animation-delay: 530ms; }
+.stagger > *:nth-child(n + 9) { animation-delay: 600ms; }
+
+/* Underline that grows from the left on hover */
+.link-grow {
+  position: relative;
+}
+.link-grow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-grow:hover::after {
+  transform: scaleX(1);
+}
+
+/* Loading placeholder used while the studio saves */
+.shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgba(227, 213, 191, 0) 0%,
+    rgba(227, 213, 191, 0.55) 50%,
+    rgba(227, 213, 191, 0) 100%
+  );
+  background-size: 200% 100%;
+}
+
+/* Studio panels never widen the page on small screens */
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -7,9 +7,11 @@ export default function ProductCard({ product, tall = false }) {
     <Link href={`/product/${product.slug}`} className="group block">
       <div className="relative overflow-hidden rounded-sm">
         <Photo
+          src={product.image}
           tone={product.tone}
           label={product.name}
           tall={tall}
+          sizes="(max-width: 768px) 50vw, 33vw"
           className="transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
         />
         {product.drop && (
@@ -26,7 +28,9 @@ export default function ProductCard({ product, tall = false }) {
         )}
       </div>
       <div className="mt-3 flex items-baseline justify-between gap-2">
-        <h3 className="font-serif text-xl leading-tight text-olive-deep">{product.name}</h3>
+        <h3 className="font-serif text-xl leading-tight text-olive-deep transition-colors duration-300 group-hover:text-olive">
+          {product.name}
+        </h3>
         <Price mvr={product.price} className="text-sm text-olive/70" />
       </div>
       <p className="mt-0.5 text-sm text-olive/55">{product.blurb}</p>

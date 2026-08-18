@@ -1,7 +1,9 @@
 import Link from "next/link";
 import Logo from "./Logo";
+import { DEFAULT_CONTENT } from "@/lib/site";
 
-export default function Footer() {
+export default function Footer({ content = DEFAULT_CONTENT.footer }) {
+  const instagram = content.instagram || "neut.co";
   return (
     <footer className="bg-chrome text-cream/70">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
@@ -11,17 +13,17 @@ export default function Footer() {
             <span className="wordmark text-3xl text-cream">neut</span>
           </div>
           <p className="mt-5 max-w-xs font-serif text-lg leading-relaxed text-cream/80">
-            Created by us, curated for you. Handmade in Malé, Maldives.
+            {content.tagline}
           </p>
         </div>
 
         <div className="text-sm">
           <p className="eyebrow mb-4 text-cream/50">Explore</p>
           <ul className="space-y-2">
-            <li><Link href="/shop" className="hover:text-cream">Shop all</Link></li>
-            <li><Link href="/builder" className="hover:text-cream">Charm builder</Link></li>
-            <li><Link href="/journal" className="hover:text-cream">Journal &amp; drops</Link></li>
-            <li><Link href="/about" className="hover:text-cream">About</Link></li>
+            <li><Link href="/shop" className="link-grow hover:text-cream">Shop all</Link></li>
+            <li><Link href="/builder" className="link-grow hover:text-cream">Charm builder</Link></li>
+            <li><Link href="/journal" className="link-grow hover:text-cream">Journal &amp; drops</Link></li>
+            <li><Link href="/about" className="link-grow hover:text-cream">About</Link></li>
           </ul>
         </div>
 
@@ -29,13 +31,18 @@ export default function Footer() {
           <p className="eyebrow mb-4 text-cream/50">Reach us</p>
           <ul className="space-y-2">
             <li>
-              <a href="https://instagram.com/neut.co" className="hover:text-cream" target="_blank" rel="noreferrer">
-                @neut.co on Instagram
+              <a
+                href={`https://instagram.com/${instagram}`}
+                className="link-grow hover:text-cream"
+                target="_blank"
+                rel="noreferrer"
+              >
+                @{instagram} on Instagram
               </a>
             </li>
-            <li>Orders &amp; questions via Instagram DM</li>
-            <li>Payment by bank transfer</li>
-            <li>Island-wide delivery</li>
+            {(content.notes || []).map((note) => (
+              <li key={note}>{note}</li>
+            ))}
           </ul>
         </div>
       </div>

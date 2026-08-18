@@ -3,6 +3,8 @@ import { Cormorant_Garamond, Jost } from "next/font/google";
 import { StoreProvider } from "@/components/store";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import Announcement from "@/components/Announcement";
+import { getContent } from "@/lib/data";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
@@ -24,14 +26,19 @@ export const metadata = {
     "Handmade charms, bracelets and necklaces from Malé, Maldives. Created by us, curated for you.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const content = await getContent();
+
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
-      <body className="font-sans antialiased">
+      <body className="overflow-x-hidden font-sans antialiased">
         <StoreProvider>
+          {content.announcement.enabled && (
+            <Announcement text={content.announcement.text} href={content.announcement.href} />
+          )}
           <Nav />
           <main className="min-h-screen">{children}</main>
-          <Footer />
+          <Footer content={content.footer} />
         </StoreProvider>
       </body>
     </html>

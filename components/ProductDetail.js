@@ -5,15 +5,17 @@ import Link from "next/link";
 import Photo from "./Photo";
 import Price from "./Price";
 import { useStore } from "./store";
-import { CHARMS } from "@/lib/products";
 
-export default function ProductDetail({ product }) {
+export default function ProductDetail({ product, charms = [] }) {
   const { addItem } = useStore();
   const [metal, setMetal] = useState(product.metals[0]);
   const [added, setAdded] = useState(false);
   const [addCharm, setAddCharm] = useState(null);
 
-  const upsells = product.charmReady ? CHARMS.filter((c) => !c.soldOut).slice(0, 4) : [];
+  const upsells = product.charmReady
+    ? charms.filter((c) => !c.soldOut && c.slug !== product.slug).slice(0, 4)
+    : [];
+  const [main, ...extra] = [product.image, ...(product.gallery || [])].filter(Boolean);
 
   function handleAdd() {
     addItem({
@@ -22,6 +24,7 @@ export default function ProductDetail({ product }) {
       price: product.price,
       metal,
       tone: product.tone,
+      image: product.image,
     });
     if (addCharm) {
       addItem({
@@ -30,6 +33,7 @@ export default function ProductDetail({ product }) {
         price: addCharm.price,
         metal,
         tone: addCharm.tone,
+        image: addCharm.image,
       });
     }
     setAdded(true);
@@ -43,13 +47,30 @@ export default function ProductDetail({ product }) {
       </Link>
 
       <div className="mt-6 grid gap-10 md:grid-cols-2">
-        <div className="grid grid-cols-2 gap-3">
-          <Photo tone={product.tone} label={product.name} tall className="col-span-2 rounded-sm" />
-          <Photo tone={[product.tone[1], product.tone[0]]} label={`${product.name} detail`} className="rounded-sm" />
-          <Photo tone={["#E3D5BF", product.tone[0]]} label={`${product.name} worn`} className="rounded-sm" />
+        <div className="grid grid-cols-2 gap-3 stagger">
+          <Photo
+            src={main}
+            tone={product.tone}
+            label={product.name}
+            tall
+            priority
+            className="col-span-2 rounded-sm"
+          />
+          <Photo
+            src={extra[0]}
+            tone={[product.tone[1], product.tone[0]]}
+            label={`${product.name} detail`}
+            className="rounded-sm"
+          />
+          <Photo
+            src={extra[1]}
+            tone={["#E3D5BF", product.tone[0]]}
+            label={`${product.name} worn`}
+            className="rounded-sm"
+          />
         </div>
 
-        <div className="md:pt-4">
+        <div className="animate-riseIn md:pt-4">
           {product.drop && <p className="eyebrow text-clay">{product.drop} drop</p>}
           <h1 className="wordmark mt-2 text-5xl leading-none text-olive-deep">{product.name}</h1>
           <p className="mt-3 font-serif text-2xl text-olive/70">
@@ -112,6 +133,12 @@ export default function ProductDetail({ product }) {
           >
             {product.soldOut ? "Sold out" : added ? "Added to cart ✓" : "Add to cart"}
           </button>
+
+          {!product.soldOut && product.stock > 0 && product.stock <= 3 && (
+            <p className="mt-3 text-xs text-clay">
+              Only {product.stock} left — made in small batches.
+            </p>
+          )}
 
           <p className="mt-4 text-xs text-olive/50">
             Payment by bank transfer · order confirmed via Instagram DM · island-wide delivery

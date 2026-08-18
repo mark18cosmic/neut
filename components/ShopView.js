@@ -3,21 +3,26 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import ProductCard from "./ProductCard";
-import { PRODUCTS, CATEGORIES, METALS, MATERIALS } from "@/lib/products";
+import { CATEGORIES, METALS, MATERIALS } from "@/lib/products";
+import { DEFAULT_CONTENT } from "@/lib/site";
 
-export default function ShopView({ initialCategory = null }) {
+export default function ShopView({
+  products = [],
+  copy = DEFAULT_CONTENT.shop,
+  initialCategory = null,
+}) {
   const [category, setCategory] = useState(initialCategory);
   const [metal, setMetal] = useState(null);
   const [material, setMaterial] = useState(null);
 
   const results = useMemo(() => {
-    return PRODUCTS.filter((p) => {
+    return products.filter((p) => {
       if (category && p.category !== category) return false;
       if (metal && !p.metals.includes(metal)) return false;
       if (material && !p.materials.includes(material)) return false;
       return true;
     });
-  }, [category, metal, material]);
+  }, [products, category, metal, material]);
 
   const active = category
     ? CATEGORIES.find((c) => c.slug === category)?.label
@@ -25,8 +30,8 @@ export default function ShopView({ initialCategory = null }) {
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-14">
-      <header className="mb-10 text-center">
-        <p className="eyebrow text-clay">Shop</p>
+      <header className="mb-10 animate-riseIn text-center">
+        <p className="eyebrow text-clay">{copy.eyebrow}</p>
         <h1 className="wordmark mt-2 text-5xl text-olive-deep">{active}</h1>
       </header>
 
@@ -48,10 +53,10 @@ export default function ShopView({ initialCategory = null }) {
 
       {results.length === 0 ? (
         <p className="py-20 text-center font-serif text-2xl text-olive/50">
-          Nothing here yet — try another filter.
+          {copy.emptyText}
         </p>
       ) : (
-        <div className="grid grid-cols-2 gap-x-5 gap-y-12 md:grid-cols-3">
+        <div key={`${category}-${metal}-${material}`} className="grid grid-cols-2 gap-x-5 gap-y-12 stagger md:grid-cols-3">
           {results.map((p) => (
             <ProductCard key={p.slug} product={p} />
           ))}
@@ -59,11 +64,9 @@ export default function ShopView({ initialCategory = null }) {
       )}
 
       {category === "charms" && (
-        <div className="mt-16 rounded-lg bg-olive px-8 py-10 text-center text-cream">
-          <p className="wordmark text-3xl">Charms are made to be layered.</p>
-          <p className="mt-2 text-sm text-cream/75">
-            Pick a chain and stack the charms you love.
-          </p>
+        <div className="mt-16 animate-riseIn rounded-lg bg-olive px-8 py-10 text-center text-cream">
+          <p className="wordmark text-3xl">{copy.charmsTitle}</p>
+          <p className="mt-2 text-sm text-cream/75">{copy.charmsBody}</p>
           <Link
             href="/builder"
             className="mt-6 inline-block rounded-full bg-cream px-7 py-2.5 text-sm text-olive-deep transition hover:bg-ivory"
