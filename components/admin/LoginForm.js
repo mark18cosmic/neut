@@ -28,7 +28,13 @@ export default function LoginForm({ next = "/admin" }) {
 
     if (authError) {
       setBusy(false);
-      setError("That email and password don't match an account.");
+      // Wrong credentials is the common case, but an unconfirmed address fails
+      // here too and looks identical to the customer — say which it is.
+      setError(
+        authError.code === "email_not_confirmed"
+          ? "This account hasn't confirmed its email address yet."
+          : "That email and password don't match an account."
+      );
       return;
     }
 
