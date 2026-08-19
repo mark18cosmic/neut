@@ -4,6 +4,7 @@ import { StoreProvider } from "@/components/store";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Announcement from "@/components/Announcement";
+import SiteChrome from "@/components/SiteChrome";
 import { getContent } from "@/lib/data";
 
 const display = Cormorant_Garamond({
@@ -33,12 +34,17 @@ export default async function RootLayout({ children }) {
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body className="overflow-x-hidden font-sans antialiased">
         <StoreProvider>
-          {content.announcement.enabled && (
-            <Announcement text={content.announcement.text} href={content.announcement.href} />
-          )}
-          <Nav />
-          <main className="min-h-screen">{children}</main>
-          <Footer content={content.footer} />
+          <SiteChrome
+            announcement={
+              content.announcement.enabled ? (
+                <Announcement text={content.announcement.text} href={content.announcement.href} />
+              ) : null
+            }
+            nav={<Nav />}
+            footer={<Footer content={content.footer} />}
+          >
+            {children}
+          </SiteChrome>
         </StoreProvider>
       </body>
     </html>
