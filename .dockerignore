@@ -2,7 +2,9 @@ node_modules
 .next
 out
 .git
-.env*.local
+.env
+.env.*
+!.env.example
 .DS_Store
 Dockerfile
 docker-compose.yml
